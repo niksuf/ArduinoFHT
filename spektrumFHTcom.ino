@@ -1,15 +1,15 @@
 // ---------------- НАСТРОЙКИ ----------------
-#define FHT_N 256          // ширина спектра х2
-#define samplingFrequency 38400
+#define FHT_N 256                                       // ширина спектра х2
+#define samplingFrequency 38400                         // частота дискретизации
 // ---------------- НАСТРОЙКИ ----------------
 
 // ---------------------- ПИНЫ ----------------------
-#define AUDIO_IN 0          // пин, куда подключен звук
+#define AUDIO_IN 0                                      // пин, куда подключен звук
 // ---------------------- ПИНЫ ----------------------
 
 // --------------- БИБЛИОТЕКИ ---------------
 #define LIN_OUT 1
-#include <FHT.h>          // преобразование Фурье
+#include <FHT.h>                                        // преобразование Хартли
 #include <Wire.h>
 #define printByte(args) write(args);
 double prevVolts = 100.0;
@@ -36,7 +36,7 @@ void setup() {
 }
 
 void loop() {
-  analyzeAudio();   // функция FHT, забивает массив fht_log_out[] величинами по спектру
+  analyzeAudio();                                       // функция FHT, забивает массив fht_log_out[] величинами по спектру
 
   Serial.println("Computed magnitudes:");
   for (int pos = 0; pos < FHT_N / 2; pos++) {
@@ -51,10 +51,10 @@ void loop() {
 void analyzeAudio() {
   for (int i = 0 ; i < FHT_N ; i++) {
     int sample = analogRead(AUDIO_IN);
-    fht_input[i] = sample; // put real data into bins
+    fht_input[i] = sample;                              // помещаем данные в массив
   }
-  fht_window();  // window the data for better frequency response
-  fht_reorder(); // reorder the data before doing the fht
-  fht_run();     // process the data in the fht
-  fht_mag_lin(); // take the output of the fht
+  fht_window();                                         // окно данных для лучшей частотной характеристики
+  fht_reorder();                                        // переупорядочивание данных перед выполнением БПХ
+  fht_run();                                            // обработка данных БПХ
+  fht_mag_lin();                                        // вывод данных БПХ
 }
